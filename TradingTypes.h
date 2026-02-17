@@ -1,0 +1,58 @@
+//
+// Created by User on 2/17/2026.
+//
+
+#ifndef TradingTypes_H
+#define TradingTypes_H
+
+#include <stdint.h>
+
+/* Constant definitions */
+static constexpr uint32_t MAX_SYMBOL_LEN = 50;
+
+/* Error Codes*/
+enum class ErrorCode: uint16_t {
+    OK = 0,
+    INVALID_PRICE = 1,
+    INSUFFICIENT_QTY = 2,
+    NETWORK_ERROR = 3,
+};
+
+enum class Side : uint8_t {
+    BUY = 1,
+    SELL = 2
+};
+
+enum class Type : uint8_t {
+    Limit = 1,
+    Market = 2
+};
+
+struct order {
+
+    uint64_t timestamp;
+    uint64_t symbolID;
+
+    uint32_t price;
+    uint32_t orderID;
+    uint16_t quantity;
+
+    Side side;
+    Type type;
+    uint8_t reserved[4];
+};
+
+struct trade {
+    uint64_t matchID;
+    uint64_t timestamp;
+
+    uint32_t price;
+    uint32_t tradeID;
+    uint16_t excutedQty;
+
+    Side AggressorSide;
+
+    uint8_t reserved[5]; // Manually padding to hit 32 bytes
+};
+
+#endif //TradingTypes_H
