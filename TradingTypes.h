@@ -2,8 +2,8 @@
 // Created by User on 2/17/2026.
 //
 
-#ifndef TradingTypes_H
-#define TradingTypes_H
+#ifndef NOVA_TradingTypes_H
+#define NOVA_TradingTypes_H
 
 #include <stdint.h>
 
@@ -28,8 +28,7 @@ enum class Type : uint8_t {
     Market = 2
 };
 
-struct order {
-
+struct Order {
     uint64_t timestamp;
     uint64_t symbolID;
 
@@ -42,17 +41,16 @@ struct order {
     uint8_t reserved[4];
 };
 
-struct trade {
+struct Trade {
     uint64_t matchID;
     uint64_t timestamp;
 
     uint32_t price;
     uint32_t tradeID;
-    uint16_t excutedQty;
+    uint16_t executedQty;
 
     Side AggressorSide;
-
     uint8_t reserved[5]; // Manually padding to hit 32 bytes
 };
 
-#endif //TradingTypes_H
+#endif // NOVA_TradingTypes_H
