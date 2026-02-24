@@ -4,10 +4,3 @@
 
 #include "OrderPool.h"
 
-::OrderPool::OrderPool(size_t capacity) {
-    pool.reserve(capacity);
-}
-
-void ::OrderPool::reset() {
-    nextAvailableIndex = 0;
-}
