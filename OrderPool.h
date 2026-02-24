@@ -7,22 +7,37 @@
 
 #include <vector>
 #include <iostream>
+#include <stack>
+
 #include "TradingTypes.h"
 
 
 class OrderPool {
 private:
     std::vector<Order> pool;
-    uint32_t nextAvailableIndex = 0;
+    std::stack<size_t, std::vector<size_t>> freeList;
 
 public:
-    explicit OrderPool(size_t capacity);
+    explicit OrderPool(size_t capacity) {
+        pool.resize(capacity);
 
-    inline Order* getNextOrder() {
-        if (nextAvailableIndex < pool.size()) {
-            return &pool[nextAvailableIndex++];
+        for (int i = 0; i < capacity; i++) {
+            freeList.push(i);
+        }
+    }
+
+    inline Order* acquire() noexcept {
+        if (__builtin_expect(!freeList.empty(), 1)) {
+            size_t index = freeList.top();
+            freeList.pop();
+            return &pool[index];
         }
         return nullptr;
+    }
+
+    inline void release (Order* order) noexcept {
+        size_t index = order - &pool[0];
+        freeList.push(index);
     }
 
     void reset();
