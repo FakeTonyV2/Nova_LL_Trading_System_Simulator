@@ -28,11 +28,13 @@ enum class Type : uint8_t {
     Market = 2
 };
 
+typedef uint64_t Price; 
+
 struct Order {
     uint64_t timestamp;
     uint64_t symbolID;
 
-    uint32_t price;
+    Price price;
     uint32_t orderID;
     uint16_t quantity;
 
@@ -45,7 +47,7 @@ struct Trade {
     uint64_t matchID;
     uint64_t timestamp;
 
-    uint32_t price;
+    Price price;
     uint32_t tradeID;
     uint16_t executedQty;
 

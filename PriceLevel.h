@@ -5,10 +5,14 @@
 #ifndef NOVA_PRICELEVEL_H
 #define NOVA_PRICELEVEL_H
 
-class PriceLevel {
-private:
+struct PriceLevel {
+    double price;
+    uint64_t totalVolume;
+    uint32_t orderCount;
 
-public:
+    Order* head = nullptr;
+    Order* tail = nullptr;
+
 };
 
 #endif //NOVA_PRICELEVEL_H
