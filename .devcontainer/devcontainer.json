@@ -1,0 +1,8 @@
+{
+  "name": "nova-l2",
+  "image": "mcr.microsoft.com/devcontainers/cpp:1-ubuntu-24.04",
+  "features": { "ghcr.io/devcontainers/features/cmake:1": {} },
+  "customizations": { "vscode": { "extensions": ["llvm-vs-code-extensions.vscode-clangd", "ms-vscode.cmake-tools"] } },
+  "postCreateCommand": "cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DNOVA_ENABLE_SANITIZERS=ON",
+  "remoteUser": "vscode"
+}

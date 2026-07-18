@@ -1,28 +1,20 @@
-# Low Latency Trading System Simulator
+# Nova L2
 
-A deterministic, event-driven trading system simulator designed to study latency, throughput, and concurrency tradeoffs in performance-critical infrastructure
+Nova L2 is a deterministic C++20 limit-order-book simulator for studying bounded allocation, event replay, and latency. It is deliberately a foundation: the matching path is single-threaded, while feed input and execution output use bounded SPSC queues so consumers can be decoupled from the matcher.
 
----
-## Motivation
-I'm aiming to build a simulated exchange + trading engine capable of processing millions of events per second while maintaining predictable latency under load. This project intentionally explores: predictable latency, memory efficiency, and scalability under sustained load.
+## Quick start
 
-The goal is not to produce profitable trading strategies, but to design and evaluate a system that resembles the core execution path of real trading infrastructure. 
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+./build/nova_replay data/sample.csv
+```
 
-As an important note, this project will run entirely on commodity hardware and focuses on architectural and algorithmic tradeoffs rather than hardware-specific optimizations.
+Replay rows use the normalized format `timestamp_ns,event_type,order_id,price,size,side`, where event types are `1=add`, `2=cancel`, `3=execute`, `4=delete` and sides are `1=buy`, `2=sell`. The feed handler is intentionally non-real-time: timestamps are carried as the simulation clock and input is drained as fast as the consumer allows.
 
----
-## Design Goals
-1. build a C++ system capable of processing 1 million+ events per second with a deterministic P99 latency of <10 microseconds.
-2. Deterministic latency behavior under load
-3. Bounded memory allocation during steady state operation
-4. Clear ownership of concurrency primitives
-5. Observable performance characteristics
-6. Reproducible benchmarking
-   
---- 
-## Non Goals
-1. No live trading
-2. No Exchaneg Connectivity (may be implemented later)
-3. No Alpha Researcg
-4. Minimal to no Machine Learning Models
+## Development
 
+Open the repository in the supplied devcontainer, or use the CMake commands above. `NOVA_ENABLE_SANITIZERS=ON` enables ASan/UBSan for debug work. `nova_tests` covers the basic add, cross, fill-publication, and cancel path; `nova_benchmark` is a lightweight smoke benchmark, not a statistically rigorous latency claim.
+
+`AsyncLogger` is provided for non-blocking producer-side logging: the matcher-side producer only enqueues a fixed-size record, while a background owner calls `drain()` and performs file I/O. The next planned slices are Prometheus text-file metrics, richer LOBSTER column mapping, and a Google Benchmark target. Any latency threshold must be calibrated per runner; CI should not claim a universal sub-microsecond guarantee on shared commodity runners.

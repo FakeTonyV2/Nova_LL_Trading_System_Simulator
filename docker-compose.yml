@@ -1,0 +1,9 @@
+services:
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    ports: ["9090:9090"]
+    volumes: ["./ops/prometheus:/etc/prometheus:ro"]
+  grafana:
+    image: grafana/grafana:11.1.0
+    ports: ["3000:3000"]
+    depends_on: [prometheus]
