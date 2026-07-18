@@ -11,7 +11,7 @@ ctest --test-dir build --output-on-failure
 ./build/nova_replay data/sample.csv
 ```
 
-Replay rows use the normalized format `timestamp_ns,event_type,order_id,price,size,side`, where event types are `1=add`, `2=cancel`, `3=execute`, `4=delete` and sides are `1=buy`, `2=sell`. The feed handler is intentionally non-real-time: timestamps are carried as the simulation clock and input is drained as fast as the consumer allows.
+Replay rows use the normalized format `timestamp_ns,event_type,order_id,price,size,side[,order_type]`, where event types are `1=add`, `2=cancel`, `3=execute`, `4=delete`, sides are `1=buy`, `2=sell`, and order types are `1=limit`, `2=market`. The feed handler is intentionally non-real-time: timestamps are carried as the simulation clock and input is drained as fast as the consumer allows.
 
 ## Development
 

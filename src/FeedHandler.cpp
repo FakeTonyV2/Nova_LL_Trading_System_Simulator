@@ -10,7 +10,25 @@ std::size_t FeedHandler::replay_file(const std::string& path) {
         std::stringstream ss(line); std::string field; std::vector<std::string> fields;
         while (std::getline(ss,field,',')) fields.push_back(field);
         if (fields.size() < 5) continue;
-        try { MDEvent e{}; e.timestamp_ns=std::stoull(fields[0]); e.type=static_cast<MDType>(std::stoi(fields[1])); e.order_id=std::stoull(fields[2]); e.price=std::stoull(fields[3]); e.size=static_cast<Quantity>(std::stoul(fields[4])); e.side=static_cast<Side>(fields.size()>5?std::stoi(fields[5]):1); if(output_.try_push(e)) ++count; else break; } catch (...) { continue; }
+        try {
+            MDEvent e{};
+            e.timestamp_ns = std::stoull(fields[0]);
+            e.type = static_cast<MDType>(std::stoi(fields[1]));
+            e.order_id = std::stoull(fields[2]);
+            e.price = std::stoull(fields[3]);
+            e.size = static_cast<Quantity>(std::stoul(fields[4]));
+            e.side = static_cast<Side>(fields.size() > 5 ? std::stoi(fields[5]) : 1);
+            if (fields.size() > 6) {
+                e.order_type = static_cast<OrderType>(std::stoi(fields[6]));
+            }
+            if (output_.try_push(e)) {
+                ++count;
+            } else {
+                break;
+            }
+        } catch (...) {
+            continue;
+        }
     }
     return count;
 }

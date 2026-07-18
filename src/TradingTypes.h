@@ -1,6 +1,13 @@
 #pragma once
 
 #include <cstdint>
+#include <type_traits>
+
+template <typename E>
+constexpr auto to_uint(E value) noexcept {
+    static_assert(std::is_enum_v<E>, "to_uint requires an enum type");
+    return static_cast<std::underlying_type_t<E>>(value);
+}
 
 using Price = std::uint64_t; // fixed-point ticks, never floating point in the engine
 using Quantity = std::uint32_t;
@@ -33,6 +40,7 @@ struct MDEvent {
     Price price{};
     Quantity size{};
     Side side{Side::Buy};
+    OrderType order_type{OrderType::Limit};
 };
 
 struct FillEvent {
